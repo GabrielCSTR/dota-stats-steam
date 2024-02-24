@@ -1,4 +1,4 @@
 {
-    "stractz_api": "https://api.stratz.com/graphql",
-    "stratz_token": "API_TOKEN"
+    "STRATZ_GQL": "https://api.stratz.com/graphql",
+    "STRATZ_TOKEN": "API_TOKEN"
 }
