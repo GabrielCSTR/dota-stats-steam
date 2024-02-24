@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Dota Stats Steam Profile",
+  "icons": {
+    "16": "images/stratz.png",
+    "48": "images/stratz.png",
+    "128": "images/stratz.png"
+  },
+  "version": "1.0",
+  "homepage_url": "https://github.com/GabrielCSTR/dota-steam",
+  "description": "Adds Dota Statistics to Steam profile.",
+  "permissions": ["activeTab", "storage"],
+  "action": {
+    "default_icon": "images/stratz.png",
+    "default_title": "DotaStats"
+  },
+  "host_permissions": ["https://api.stratz.com/*"],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.steamcommunity.com/id/*",
+        "*://*.steamcommunity.com/profiles/*"
+      ],
+      "exclude_matches": [
+        "*://*.steamcommunity.com/id/*/allcomments*",
+        "*://*.steamcommunity.com/profiles/*/allcomments*"
+      ],
+      "css": ["style.css"],
+      "js": ["scripts/content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["images/ranks/*.png", "config.json"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
