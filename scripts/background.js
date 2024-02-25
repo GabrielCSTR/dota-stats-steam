@@ -60,6 +60,14 @@ async function makeGraphQLProfileRequest(steamID3) {
         isDotaPlusSubscriber
         dotaAccountLevel
         seasonLeaderboardRank
+        guild{
+          guild{
+            name
+            motd
+            logo
+            tag
+          }
+        }
         battlepass{
           level
         }
@@ -175,7 +183,10 @@ function processGraphQLData(data) {
     winCount: playerData?.winCount || 0,
     firstMatchDate: convertTimestampToDate(playerData?.firstMatchDate),
     MatchGroupByHero: playerData.MatchGroupByHero,
-    battlepass_level: playerData.steamAccount.battlepass[0].level || ""
+    battlepass_level: playerData.steamAccount.battlepass[0].level || "",
+    guild_name: playerData.steamAccount.guild.guild.name || "",
+    guild_desc: playerData.steamAccount.guild.guild.motd || "",
+    guild_tag: playerData.steamAccount.guild.guild.tag || ""
   };
 
   processedData.medalImage = getMedalImage(processedData.seasonRank);

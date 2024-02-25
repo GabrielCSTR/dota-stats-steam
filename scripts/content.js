@@ -60,6 +60,9 @@ function updateDotaStatsDOM(data) {
   const countryCode = data.countryCode;
   const isDotaplus = data.isDotaPlusSubscriber;
   const battlepass_level = data.battlepass_level;
+  const guild_name = data.guild_name;
+  const guild_desc = data.guild_desc;
+  const guild_tag = data.guild_tag;
 
   const proSVG = isPro
     ? `<div class="tooltip">
@@ -109,20 +112,30 @@ function updateDotaStatsDOM(data) {
 					  </div>
 					<div class="favoritegroup_content dota_stats_favoritegroup_content">
 							<div class="favoritegroup_namerow ellipsis dota_stats_favoritegroup_namerow">
-								<a class="favoritegroup_name" href="https://stratz.com/players/${steamID3}">${playerName} ${proSVG} ${anonymousSVG}</a>  ${
-    countryCode ? `- ${countryCode}` : ""
-  }
+								<a class="favoritegroup_name" href="https://stratz.com/players/${steamID3}">
+                ${playerName} 
+                ${proSVG} 
+                ${anonymousSVG}
+                </a>  
+                ${
+                  guild_name
+                    ? `
+                  <span class="guild" data-tooltip-text="${guild_name} - ${guild_desc}" >[${guild_tag}]</span>
+                  `
+                    : ""
+                }
+                ${countryCode ? `- ${countryCode}` : ""}
                 ${
                   battlepass_level
                     ? `
-                      <span class="dota_stats_battlepass_level value" data-tooltip-text="Battle Pass Level" >${battlepass_level}</span>
-                      <img class="dota_stats_dotalevel" src="https://cdn.stratz.com/images/dota2/battle_pass/trophy_ti2023_level_2.png">
+                    <img class="dota_stats_dotalevel" src="https://cdn.stratz.com/images/dota2/battle_pass/trophy_ti2023_level_2.png">
+                    <span class="dota_stats_battlepass_level value" data-tooltip-text="Battle Pass Level" >${battlepass_level}</span>
                       `
                     : ""
                 }
                 ${
                   isDotaplus
-                    ? `<img class="dota_stats_dotaplus" data-tooltip-text="DotaPlus Subscriber"  src="https://cdn.stratz.com/images/dota2/plus/logo.png">`
+                    ? `<img class="dota_stats_dotaplus" data-tooltip-text="Subscriber Dota Plus"  src="https://cdn.stratz.com/images/dota2/plus/logo.png">`
                     : ""
                 }
                 

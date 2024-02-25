@@ -121,6 +121,7 @@
 .dota_stats_favoritegroup_namerow {
   display: flex;
   justify-items: center;
+  align-items: center;
 }
 
 .dota_stats_battlepass_level {
@@ -129,10 +130,24 @@
   padding: 0.2em 0.3em 0.3em;
   line-height: normal; */
   color: hsla(0,0%,100%,0.8);
-  position: fixed;
-  margin-left: 140px;
+  position: relative;
+  margin-left: -36px;
   margin-top: 4px;
   z-index: 999;
+}
+
+.guild {
+  -webkit-letter-spacing: 0.0083em;
+  -moz-letter-spacing: 0.0083em;
+  -ms-letter-spacing: 0.0083em;
+  letter-spacing: 0.0083em;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+  color: hsl(187,31%,73%);
+  display: inline;
+  vertical-align: middle;
+  margin-left: 5px;
 }
 
 @media screen and (max-width: 480px) {
