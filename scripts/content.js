@@ -17,23 +17,24 @@ function getSteamID() {
 
 const steamID = getSteamID();
 const steamID3 = BigInt(steamID) - BigInt("76561197960265728");
-
+console.log("STEAMID", steamID3.toString());
 chrome.runtime.sendMessage({
   action: "fetchDotaStats",
   steamID: steamID3.toString()
 });
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  if (message.action === "updateDotaStats") {
-    console.log("DATAAA", message.data);
+  if (message.data && message.action === "updateDotaStats") {
+    console.log("UPDATE DATA", message.data);
     updateDotaStatsDOM(message.data);
   }
-  if (message.action === "logData") {
-    console.log("EVENT LOG", message.data);
+  if (message.data && message.action === "logData") {
+    console.log("HEROS LOG", message.data);
   }
 });
 
 function updateDotaStatsDOM(data) {
+  console.log("UPDATE DATA", data);
   const medalImage = data.seasonLeaderboardRank
     ? ""
     : chrome.runtime.getURL(data.medalImage);
@@ -56,6 +57,9 @@ function updateDotaStatsDOM(data) {
   const playerName = data.proSteamAccount?.name || data.playerName;
   const isPro = data.isPro;
   const isAnonymous = data.isAnonymous;
+  const countryCode = data.countryCode;
+  const isDotaplus = data.isDotaPlusSubscriber;
+  const battlepass_level = data.battlepass_level;
 
   const proSVG = isPro
     ? `<div class="tooltip">
@@ -77,28 +81,54 @@ function updateDotaStatsDOM(data) {
 
   const textNode = document.createElement("div");
   textNode.id = "dotastats";
+  let bestHeroHtml = "";
+  data?.MatchGroupByHero.map((item) => {
+    bestHeroHtml += `<div class="game_info_achievement dota_stats_best_hero" data-tooltip-text="${item.displayName}">
+      <a href="#">
+      <img class="dota_stats_img" src="https://cdn.stratz.com/images/dota2/heroes/${item.shortName}_horz.png">
+      </a>
+    </div>
+     `;
+  });
   textNode.innerHTML = `
-  <div class="profile_customization">
-    <div class="profile_customization_header">Dota 2 Stats <span class="editor">by <a href="https://www.twitch.tv/xstrdoto" class="whiteLink" target="_blank">xSTRDoto</a></span></div>
-    <div class="profile_customization_block">
-      <div class="favoritegroup_showcase">
-        <div class="showcase_content_bg">
-          <div class="dotastats_content favoritegroup_showcase_group showcase_slot">                  
-            <div class="favoritegroup_content">
-              <div class="dotastats_namerow favoritegroup_namerow ellipsis " >
-                <a href="https://stratz.com/players/${steamID3}" class="favoritegroup_name whiteLink" target="_blank">
-                  ${playerName} ${proSVG} ${anonymousSVG}
-                </a>
-                <br>
+  <div data-panel="{&quot;type&quot;:&quot;PanelGroup&quot;}" class="profile_customization">
+		<div class="profile_customization_header">Dota 2 Stats</div>
+	  <div class="profile_customization_block">
+		<div class="favoritegroup_showcase">
+			<div class="showcase_content_bg">
+				<div data-panel="{&quot;flow-children&quot;:&quot;row&quot;}" class="favoritegroup_showcase_group showcase_slot ">
+						<div class="favoritegroup_avatar">
+              ${
+                starImage
+                  ? `<img src="${starImage}" alt="Star Image" class="custom-star-image">`
+                  : ""
+              }
+              <a href="https://stratz.com/players/${steamID3}">
+                <img src="${medalImage}">
+              </a>
+					  </div>
+					<div class="favoritegroup_content dota_stats_favoritegroup_content">
+							<div class="favoritegroup_namerow ellipsis dota_stats_favoritegroup_namerow">
+								<a class="favoritegroup_name" href="https://stratz.com/players/${steamID3}">${playerName} ${proSVG} ${anonymousSVG}</a>  ${
+    countryCode ? `- ${countryCode}` : ""
+  }
+                ${
+                  battlepass_level
+                    ? `
+                      <span class="dota_stats_battlepass_level value" data-tooltip-text="Battle Pass Level" >${battlepass_level}</span>
+                      <img class="dota_stats_dotalevel" src="https://cdn.stratz.com/images/dota2/battle_pass/trophy_ti2023_level_2.png">
+                      `
+                    : ""
+                }
+                ${
+                  isDotaplus
+                    ? `<img class="dota_stats_dotaplus" data-tooltip-text="DotaPlus Subscriber"  src="https://cdn.stratz.com/images/dota2/plus/logo.png">`
+                    : ""
+                }
+                
                 <span class="dotastats_description favoritegroup_description">
                   ${data.isAnonymous ? "" : ""}
                 </span>
-                ${
-                  starImage
-                    ? `<img src="${starImage}" alt="Star Image" class="custom-star-image" style="left: 264px;">`
-                    : ""
-                }
-                <br>
                 <span class="dotastats_description favoritegroup_description leaderboard-rank">
                   ${
                     data.seasonLeaderboardRank
@@ -106,56 +136,56 @@ function updateDotaStatsDOM(data) {
                       : ""
                   }
                 </span>
+                </div>
+							<div class="favoritegroup_description">
+              <div class="label">Best Heros:</div>
+              <div class="achievement_icons">
+                ${bestHeroHtml}
+              </div>				
               </div>
-              <div class="dotastats_stats_block">
-                <div class="dotastats_stats_row2 favoritegroup_stats showcase_stats_row">
-                  ${
-                    medalImage
-                      ? `<div class="dotastats_stat showcase_stat favoritegroup_online">
-                    <div class="value">
-                      <img class="medal-image" src="${medalImage}" alt="Medal Image">
-                    </div>
-                  </div>`
-                      : ""
-                  }
-                  ${
-                    leaderboardMedalImage
-                      ? `<div class="dotastats_stat showcase_stat favoritegroup_online">
-                    <div class="value">
-                      <img class="leaderboard-medal-image" src="${leaderboardMedalImage}" alt="Leaderboard Medal Image">
-                    </div>
-                  </div>`
-                      : ""
-                  }
-                  <div class="dotastats_stat showcase_stat favoritegroup_online">
-                    <div class="value" ;">${data.matchCount}</div>
+							<div class="favoritegroup_stats showcase_stats_row">
+                  <div class="showcase_stat">
+                    <div class="value">${data.matchCount}</div>
                     <div class="label">Matches</div>
                   </div>
-                  <div class="dotastats_stat showcase_stat favoritegroup_online">
-                    <div class="value" style="color: ${
+                  <div class="showcase_stat favoritegroup_ingame">
+                    <div class="value"style="color: ${
                       winRate < 50 ? "red" : "green"
                     };">${winRate.toFixed(2)}%</div>
                     <div class="label">Win Rate</div>
                   </div>
-                  <div class="dotastats_stat showcase_stat favoritegroup_online">
-                    <div class="value">
+                    <div class="showcase_stat favoritegroup_online">
+                      <div class="value">
                       ${
                         data.firstMatchDate
                           ? new Date(data.firstMatchDate).toLocaleDateString()
                           : "N/A"
                       }
+                      </div>
+                      <div class="label">First Match Date</div>
                     </div>
-                    <div class="label">First Match Date</div>
-                  </div>
-                  <br>
+                  <div style="clear: left;"></div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
+              
+							</div>
+					</div>
+			</div>
+
+      <div class="game_info_stats_rule"></div>
+          <div class="game_info_stats_publishedfilecounts">
+            <span class="published_file_count_ctn">
+              <span class="published_file_icon screenshot"></span>
+              <a class="published_file_link" href="https://steamcommunity.com/profiles/76561199253133676/screenshots/?appid=570">Capturas de tela 4</a>
+            </span>
+            <span class="published_file_count_ctn">
+              <span class="published_file_icon recommendation"></span>
+              <a class="published_file_link" href="https://steamcommunity.com/profiles/76561199253133676/recommended/570/">Análise 1</a>
+            </span>
       </div>
-    </div>
-  </div>`;
+      
+		</div>
+	</div>
+</div>`;
 
   const existingNode = document.getElementById("dotastats");
   if (existingNode) {

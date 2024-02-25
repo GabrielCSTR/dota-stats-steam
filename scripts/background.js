@@ -8,12 +8,15 @@ chrome.runtime.onInstalled.addListener(() => {
 
 let bearerToken = "";
 let stratzApi = "";
+let processedData = "";
+let allHeros = "";
+
 chrome.storage.local.get("config", (data) => {
   bearerToken = data.config.STRATZ_TOKEN;
   stratzApi = data.config.STRATZ_GQL;
 });
 
-function makeGraphQLRequest(steamID3) {
+async function makeGraphQLProfileRequest(steamID3) {
   const query = `
   query playerInfo ($steamid: Long!)
   {
@@ -57,6 +60,9 @@ function makeGraphQLRequest(steamID3) {
         isDotaPlusSubscriber
         dotaAccountLevel
         seasonLeaderboardRank
+        battlepass{
+          level
+        }
         proSteamAccount {
           isPro
           name
@@ -82,7 +88,30 @@ function makeGraphQLRequest(steamID3) {
     steamid: steamID3
   };
 
-  return fetch(stratzApi, {
+  await getRequestAPIStratz(stratzApi, query, variables, "playerInfo");
+}
+
+async function makeGraphQLHerosRequest() {
+  const query = `
+  query GetAllHeroes {
+    constants {
+      heroes {
+        id
+        name
+        displayName
+        shortName
+        stats {
+          primaryAttribute
+        }
+      }
+    }
+  }
+  `;
+  await getRequestAPIStratz(stratzApi, query, null, "allHeros");
+}
+
+async function getRequestAPIStratz(stratzApi, query, variables, type) {
+  return await fetch(stratzApi, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -91,19 +120,39 @@ function makeGraphQLRequest(steamID3) {
     body: JSON.stringify({ query, variables })
   })
     .then((response) => response.json())
-    .then((data) => processAndSendMessage(data))
+    .then((data) => processAndSendMessage(data, type))
     .catch((error) => console.error("GraphQL Error:", error));
 }
 
-function processAndSendMessage(data) {
-  sendMessageLog(data);
-  const processedData = processGraphQLData(data);
+function processAndSendMessage(data, type) {
+  // sendMessageLog(data);
+  if (type === "playerInfo") {
+    processedData = data?.data?.player;
+  }
+  if (type === "allHeros") {
+    allHeros = data?.data?.constants?.heroes;
+  }
+  processGraphQLPlayer();
+  processedData = processGraphQLData(data);
   sendMessageToContentScript(processedData);
+}
+function processGraphQLPlayer() {
+  if (processedData.simpleSummary) {
+    processedData?.MatchGroupByHero.find((hero) => {
+      const bestHero = allHeros.find((item) => item.id === hero.heroId);
+      hero.displayName = bestHero.displayName;
+      hero.shortName = bestHero.shortName;
+    });
+    sendMessageLog(processedData);
+  }
+}
+
+function verificarHeroId(heroes, heroId) {
+  return heroes.find((hero) => hero.heroId === heroId) || null;
 }
 
 function processGraphQLData(data) {
   const playerData = data?.data?.player;
-  console.log("PLAYER DATA", data);
   // Use proSteamAccount name if available, otherwise use playerName
   const playerName =
     (playerData?.steamAccount?.proSteamAccount?.isPro &&
@@ -113,15 +162,20 @@ function processGraphQLData(data) {
 
   const processedData = {
     playerName: playerName,
+    countryCode: playerData?.steamAccount?.countryCode,
     isPro: playerData?.steamAccount?.proSteamAccount?.isPro || false, // Added isPro field
     isAnonymous: playerData?.steamAccount?.isAnonymous || false,
     seasonRank: playerData?.steamAccount?.seasonRank || "",
     smurfFlag: playerData?.steamAccount?.smurfFlag || false,
+    isDotaPlusSubscriber:
+      playerData?.steamAccount?.isDotaPlusSubscriber || false,
     seasonLeaderboardRank:
       playerData?.steamAccount?.seasonLeaderboardRank || "",
     matchCount: playerData?.matchCount || 0,
     winCount: playerData?.winCount || 0,
-    firstMatchDate: convertTimestampToDate(playerData?.firstMatchDate)
+    firstMatchDate: convertTimestampToDate(playerData?.firstMatchDate),
+    MatchGroupByHero: playerData.MatchGroupByHero,
+    battlepass_level: playerData.steamAccount.battlepass[0].level || ""
   };
 
   processedData.medalImage = getMedalImage(processedData.seasonRank);
@@ -200,9 +254,14 @@ function sendMessageLog(data) {
   });
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function (
+  request,
+  sender,
+  sendResponse
+) {
   if (request.action === "fetchDotaStats") {
     const steamID3 = Number(request.steamID);
-    makeGraphQLRequest(steamID3);
+    await makeGraphQLHerosRequest(); // get all heros
+    await makeGraphQLProfileRequest(steamID3); // get player info
   }
 });

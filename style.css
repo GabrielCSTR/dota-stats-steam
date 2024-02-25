@@ -28,7 +28,8 @@
   margin-top: -20px !important;
   z-index: 999 !important;
   position: fixed !important;
-  top: 95px !important;
+  top: 86px !important;
+  left: 273px;
 }
 
 .leaderboard-rank {
@@ -49,6 +50,10 @@
 
 .editor {
   color: grey;
+
+  a {
+    color: grey;
+  }
 }
 
 .dotastats_stats_row2 {
@@ -87,4 +92,53 @@
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
+}
+
+.dota_stats_best_hero {
+  margin: 0 10px 0 0;
+}
+
+.dota_stats_img {
+  width: 45px !important;
+  height: 32px !important;
+}
+
+.dota_stats_dotaplus{
+  position: relative;
+  width: 42px;
+  margin-left: 10px;
+}
+.dota_stats_dotalevel {
+  position: relative;
+  width: 42px;
+  margin-left: 10px;
+}
+
+.dota_stats_favoritegroup_content {
+  height: 180px !important;
+}
+
+.dota_stats_favoritegroup_namerow {
+  display: flex;
+  justify-items: center;
+}
+
+.dota_stats_battlepass_level {
+  /* background-color: hsla(0,0%,0%,0.7);
+  border-radius: 4px;
+  padding: 0.2em 0.3em 0.3em;
+  line-height: normal; */
+  color: hsla(0,0%,100%,0.8);
+  position: fixed;
+  margin-left: 140px;
+  margin-top: 4px;
+  z-index: 999;
+}
+
+@media screen and (max-width: 480px) {
+  .custom-star-image{
+    left: 18px !important;
+    top: 83px !important;
+    margin-left: -8px !important;
+  }
 }
