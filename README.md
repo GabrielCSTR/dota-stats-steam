@@ -34,7 +34,7 @@ The Dota Stats is a Google Chrome extension enhances the Steam profile by displa
 ## Acknowledgment
 - >[Stratz](https://stratz.com/) team for providing a great GraphQL API
 
-- >Inspired by the [FaceitStats](https://github.com/boomix/Faceit-stats) and [asphodelius](https://github.com/asphodelius/DotaStats)
+- >Inspired by the [FaceitStats](https://github.com/boomix/Faceit-stats) and [DotaStats](https://github.com/asphodelius/DotaStats)
 
 
 
