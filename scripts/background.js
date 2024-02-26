@@ -182,18 +182,18 @@ function processGraphQLData(data) {
     matchCount: playerData?.matchCount || 0,
     winCount: playerData?.winCount || 0,
     firstMatchDate: convertTimestampToDate(playerData?.firstMatchDate),
-    MatchGroupByHero: playerData.MatchGroupByHero,
-    battlepass_level: playerData.steamAccount.battlepass[0].level || "",
-    guild_name: playerData.steamAccount.guild.guild.name || "",
-    guild_desc: playerData.steamAccount.guild.guild.motd || "",
-    guild_tag: playerData.steamAccount.guild.guild.tag || ""
+    MatchGroupByHero: playerData?.MatchGroupByHero,
+    battlepass_level: playerData?.steamAccount?.battlepass[0]?.level || "",
+    guild_name: playerData?.steamAccount?.guild?.guild.name || "",
+    guild_desc: playerData?.steamAccount?.guild?.guild.motd || "",
+    guild_tag: playerData?.steamAccount?.guild?.guild.tag || ""
   };
 
-  processedData.medalImage = getMedalImage(processedData.seasonRank);
-  processedData.starImage = getStarImage(processedData.seasonRank);
+  processedData.medalImage = getMedalImage(processedData?.seasonRank);
+  processedData.starImage = getStarImage(processedData?.seasonRank);
   processedData.leaderboardMedalImage = getLeaderboardMedalImage(
-    processedData.seasonRank,
-    processedData.seasonLeaderboardRank
+    processedData?.seasonRank,
+    processedData?.seasonLeaderboardRank
   );
 
   return processedData;

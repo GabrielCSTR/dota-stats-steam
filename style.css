@@ -106,7 +106,8 @@
 .dota_stats_dotaplus{
   position: relative;
   width: 42px;
-  margin-left: 10px;
+  margin-left: 15px;
+  cursor: help;
 }
 .dota_stats_dotalevel {
   position: relative;
@@ -148,6 +149,17 @@
   display: inline;
   vertical-align: middle;
   margin-left: 5px;
+  cursor: help;
+}
+
+.icon_info {
+  width: 23px !important;
+  height: 23px !important;
+  display: inline-block;
+  margin-right: 4px;
+  background-position: center;
+  background-repeat: no-repeat;
+  vertical-align: middle;
 }
 
 @media screen and (max-width: 480px) {
