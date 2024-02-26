@@ -145,14 +145,12 @@ function processAndSendMessage(data, type) {
   sendMessageToContentScript(processedData);
 }
 function processGraphQLPlayer() {
-  if (processedData.simpleSummary) {
-    processedData?.MatchGroupByHero.find((hero) => {
-      const bestHero = allHeros.find((item) => item.id === hero.heroId);
-      hero.displayName = bestHero.displayName;
-      hero.shortName = bestHero.shortName;
-    });
-    sendMessageLog(processedData);
-  }
+  processedData?.MatchGroupByHero.find((hero) => {
+    const bestHero = allHeros.find((item) => item.id === hero.heroId);
+    hero.displayName = bestHero.displayName;
+    hero.shortName = bestHero.shortName;
+  });
+  sendMessageLog(processedData);
 }
 
 function verificarHeroId(heroes, heroId) {

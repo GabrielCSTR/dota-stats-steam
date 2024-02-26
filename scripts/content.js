@@ -84,7 +84,7 @@ function updateDotaStatsDOM(data) {
   const textNode = document.createElement("div");
   textNode.id = "dotastats";
   let bestHeroHtml = "";
-  data?.MatchGroupByHero.map((item) => {
+  data?.MatchGroupByHero?.find((item) => {
     bestHeroHtml += `<div class="game_info_achievement dota_stats_best_hero" data-tooltip-text="${item.displayName}">
       <a href="#">
       <img class="dota_stats_img" src="https://cdn.stratz.com/images/dota2/heroes/${item.shortName}_horz.png">
@@ -105,9 +105,21 @@ function updateDotaStatsDOM(data) {
                   ? `<img src="${starImage}" alt="Star Image" class="custom-star-image">`
                   : ""
               }
-              <a href="https://stratz.com/players/${steamID3}">
-                <img src="${medalImage}">
-              </a>
+              ${
+                medalImage
+                  ? ` <a href="https://stratz.com/players/${steamID3}">
+                        <img src="${medalImage}">
+                      </a>
+                `
+                  : ""
+              }
+              ${
+                leaderboardMedalImage
+                  ? `
+                    <img src="${leaderboardMedalImage}" alt="Leaderboard Medal Image">
+                  `
+                  : ""
+              }
 					  </div>
 					<div class="favoritegroup_content dota_stats_favoritegroup_content">
 							<div class="favoritegroup_namerow ellipsis dota_stats_favoritegroup_namerow">

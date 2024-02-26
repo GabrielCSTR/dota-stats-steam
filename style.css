@@ -41,8 +41,8 @@
   border-color: black !important;
   align-items: center !important;
 
-  left: -21%;
-  top: 63%;
+  left: -19%;
+  top: 73%;
   transform: translate(-50%, -50%);
   padding-right: 6px !important;
   padding-left: 6px !important;
@@ -130,11 +130,16 @@
   border-radius: 4px;
   padding: 0.2em 0.3em 0.3em;
   line-height: normal; */
-  color: hsla(0,0%,100%,0.8);
+  /* color: hsla(0,0%,100%,0.8); */
   position: relative;
   margin-left: -36px;
   margin-top: 4px;
   z-index: 999;
+  /* position: absolute; */
+  /* top: 10px;
+  left: 52%; */
+  /* transform: translate(-150%, -50%); */
+  color: white;
 }
 
 .guild {
