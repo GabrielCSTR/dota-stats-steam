@@ -1,8 +1,9 @@
 # Dota Stats Extension Google Chrome for Steam profile
 ---
 ## Overview
-
 The Dota Stats is a Google Chrome extension enhances the Steam profile by displaying providing you with  insights into Dota 2 player statistic using [Stratz API](https://stratz.com) and [GraphQL](https://graphql.org).
+This extension allows you to watch your detailed DOTA 2 statistics.
+Using this extension you can see not only your stats, but the opponent's stats too, so it'll be helpful to see who's playing against you.
 
 ---
 
@@ -34,7 +35,7 @@ The Dota Stats is a Google Chrome extension enhances the Steam profile by displa
 ## Acknowledgment
 - >[Stratz](https://stratz.com/) team for providing a great GraphQL API
 
-- >Inspired by the [FaceitStats](https://github.com/boomix/Faceit-stats) and [asphodelius](https://github.com/asphodelius/DotaStats)
+- >Inspired by the [FaceitStats](https://github.com/boomix/Faceit-stats) and [DotaStats](https://github.com/asphodelius/DotaStats)
 
 
 
