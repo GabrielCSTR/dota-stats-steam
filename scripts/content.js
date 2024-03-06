@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     updateDotaStatsDOM(message.data);
   }
   if (message.data && message.action === "logData") {
-    // console.log("HEROS LOG", message.data);
+    // console.log("DATA LOG", message.data);
   }
 });
 
@@ -75,7 +75,7 @@ function updateDotaStatsDOM(data) {
     : "";
 
   const anonymousSVG = isAnonymous
-    ? `<div class="tooltip" data-tooltip-text="Anonymous">
+    ? `<div class="tooltip" data-tooltip-text="Private">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="height: 20px; width: 20px; fill: rgba(255, 255, 255, 0.36);">
         <path d="M12 24C5.373 24 0 18.627 0 12S5.373 0 12 0s12 5.373 12 12-5.373 12-12 12zm.017-16.5c-11.065 0-8.94 9-3.962 9 .998 0 1.937-.485 2.536-1.31l.643-.885a.96.96 0 0 1 1.566 0l.643.886a3.136 3.136 0 0 0 2.535 1.309c4.747 0 7.266-9-3.961-9zM8.6 13.227c-1.026 0-1.694-.601-2.002-.962a.408.408 0 0 1 0-.53c.308-.361.975-.962 2.002-.962 1.027 0 1.694.601 2.002.962.13.153.13.377 0 .53-.308.361-.976.962-2.002.962zm6.8 0c-1.027 0-1.694-.601-2.002-.962a.408.408 0 0 1 0-.53c.308-.361.975-.962 2.002-.962 1.027 0 1.694.601 2.002.962.13.153.13.377 0 .53-.308.361-.976.962-2.002.962z"/>
       </svg> 
@@ -85,10 +85,14 @@ function updateDotaStatsDOM(data) {
   const textNode = document.createElement("div");
   textNode.id = "dotastats";
   let bestHeroHtml = "";
-  data?.MatchGroupByHero?.find((item) => {
-    bestHeroHtml += `<div class="game_info_achievement dota_stats_best_hero" data-tooltip-text="${item.displayName}">
+  data?.bestHeroes?.find((item) => {
+    bestHeroHtml += `<div class="game_info_achievement dota_stats_best_hero item_showcase_item" data-tooltip-text="${
+      item.hero.displayName
+    } winrate: ${item.winrate.toFixed(1)}%">
       <a href="#">
-      <img class="dota_stats_img" src="https://cdn.stratz.com/images/dota2/heroes/${item.shortName}_horz.png">
+      <img class="dota_stats_img" src="https://cdn.stratz.com/images/dota2/heroes/${
+        item.hero.shortName
+      }_horz.png">
       </a>
     </div>
      `;

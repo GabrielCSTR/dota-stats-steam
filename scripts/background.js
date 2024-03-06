@@ -10,6 +10,7 @@ let bearerToken = "";
 let stratzApi = "";
 let processedData = "";
 let allHeros = "";
+let playerBestHeroes = "";
 
 chrome.storage.local.get("config", (data) => {
   bearerToken = data.config.STRATZ_TOKEN;
@@ -93,7 +94,7 @@ async function makeGraphQLProfileRequest(steamID3) {
   `;
 
   const variables = {
-    steamid: steamID3
+    steamid: steamID3,
   };
 
   await getRequestAPIStratz(stratzApi, query, variables, "playerInfo");
@@ -118,14 +119,46 @@ async function makeGraphQLHerosRequest() {
   await getRequestAPIStratz(stratzApi, query, null, "allHeros");
 }
 
+async function makeGraphQLGetPlayerBestHeroes(steamID3) {
+  const query = `
+  query GetPlayerBestHeroes($steamAccountId: Long!,  $take: Int!, $gameVersionId: Short!) {
+    player(steamAccountId: $steamAccountId) {
+      steamAccountId
+      matchCount
+      heroesGroupBy: matchesGroupBy(
+        request: { playerList: SINGLE, groupBy: HERO, take: $take }
+      ) {
+        ... on MatchGroupByHeroType {
+          heroId
+          hero(gameVersionId: $gameVersionId) {
+            id
+            displayName
+            shortName
+          }
+          winCount
+          matchCount
+        }
+      }
+    }
+  }
+  `;
+  const variables = {
+    steamAccountId: steamID3,
+    take: 50000,
+    gameVersionId: 169,
+  };
+
+  await getRequestAPIStratz(stratzApi, query, variables, "bestHeroes");
+}
+
 async function getRequestAPIStratz(stratzApi, query, variables, type) {
   return await fetch(stratzApi, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${bearerToken}`
+      Authorization: `Bearer ${bearerToken}`,
     },
-    body: JSON.stringify({ query, variables })
+    body: JSON.stringify({ query, variables }),
   })
     .then((response) => response.json())
     .then((data) => processAndSendMessage(data, type))
@@ -133,22 +166,31 @@ async function getRequestAPIStratz(stratzApi, query, variables, type) {
 }
 
 function processAndSendMessage(data, type) {
-  // sendMessageLog(data);
+  sendMessageLog(data);
   if (type === "playerInfo") {
     processedData = data?.data?.player;
   }
-  if (type === "allHeros") {
-    allHeros = data?.data?.constants?.heroes;
+  // if (type === "allHeros") {
+  //   allHeros = data?.data?.constants?.heroes;
+  // }
+  if (type === "bestHeroes") {
+    playerBestHeroes = data?.data?.player?.heroesGroupBy.sort(
+      (a, b) => b.matchCount - a.matchCount
+    );
   }
   processGraphQLPlayer();
   processedData = processGraphQLData(data);
   sendMessageToContentScript(processedData);
 }
 function processGraphQLPlayer() {
-  processedData?.MatchGroupByHero.find((hero) => {
-    const bestHero = allHeros.find((item) => item.id === hero.heroId);
-    hero.displayName = bestHero.displayName;
-    hero.shortName = bestHero.shortName;
+  // processedData?.MatchGroupByHero.find((hero) => {
+  //   const bestHero = allHeros.find((item) => item.id === hero.heroId);
+  //   hero.displayName = bestHero.displayName;
+  //   hero.shortName = bestHero.shortName;
+  // });
+  processedData.bestHeroes = playerBestHeroes?.slice(0, 5);
+  processedData.bestHeroes.find((hero) => {
+    hero.winrate = (hero.winCount / hero.matchCount) * 100;
   });
   sendMessageLog(processedData);
 }
@@ -180,11 +222,11 @@ function processGraphQLData(data) {
     matchCount: playerData?.matchCount || 0,
     winCount: playerData?.winCount || 0,
     firstMatchDate: convertTimestampToDate(playerData?.firstMatchDate),
-    MatchGroupByHero: playerData?.MatchGroupByHero,
+    bestHeroes: playerData?.bestHeroes,
     battlepass_level: playerData?.steamAccount?.battlepass[0]?.level || "",
     guild_name: playerData?.steamAccount?.guild?.guild.name || "",
     guild_desc: playerData?.steamAccount?.guild?.guild.motd || "",
-    guild_tag: playerData?.steamAccount?.guild?.guild.tag || ""
+    guild_tag: playerData?.steamAccount?.guild?.guild.tag || "",
   };
 
   processedData.medalImage = getMedalImage(processedData?.seasonRank);
@@ -241,7 +283,7 @@ function sendMessageToContentScript(data) {
     if (activeTab) {
       chrome.tabs.sendMessage(activeTab.id, {
         action: "updateDotaStats",
-        data: data
+        data: data,
       });
     } else {
       console.error("No active tab found");
@@ -255,7 +297,7 @@ function sendMessageLog(data) {
     if (activeTab) {
       chrome.tabs.sendMessage(activeTab.id, {
         action: "logData",
-        data: data
+        data: data,
       });
     } else {
       console.error("No active tab found");
@@ -270,7 +312,8 @@ chrome.runtime.onMessage.addListener(async function (
 ) {
   if (request.action === "fetchDotaStats") {
     const steamID3 = Number(request.steamID);
-    await makeGraphQLHerosRequest(); // get all heros
+    // await makeGraphQLHerosRequest(); // get all heros
+    await makeGraphQLGetPlayerBestHeroes(steamID3); // get best heroes
     await makeGraphQLProfileRequest(steamID3); // get player info
   }
 });
