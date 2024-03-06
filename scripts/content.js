@@ -17,24 +17,25 @@ function getSteamID() {
 
 const steamID = getSteamID();
 const steamID3 = BigInt(steamID) - BigInt("76561197960265728");
-console.log("STEAMID", steamID3.toString());
 chrome.runtime.sendMessage({
   action: "fetchDotaStats",
-  steamID: steamID3.toString()
+  steamID: steamID3.toString(),
 });
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  if (message.data && message.action === "updateDotaStats") {
-    console.log("UPDATE DATA", message.data);
+  if (
+    message.data &&
+    message.action === "updateDotaStats" &&
+    message.data.winCount > 0
+  ) {
     updateDotaStatsDOM(message.data);
   }
   if (message.data && message.action === "logData") {
-    console.log("HEROS LOG", message.data);
+    // console.log("HEROS LOG", message.data);
   }
 });
 
 function updateDotaStatsDOM(data) {
-  console.log("UPDATE DATA", data);
   const medalImage = data.seasonLeaderboardRank
     ? ""
     : chrome.runtime.getURL(data.medalImage);
