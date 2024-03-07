@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     updateDotaStatsDOM(message.data);
   }
   if (message.data && message.action === "logData") {
-    // console.log("DATA LOG", message.data);
+    console.log("DATA LOG", message.data);
   }
 });
 
@@ -144,8 +144,7 @@ function updateDotaStatsDOM(data) {
                 ${
                   battlepass_level
                     ? `
-                    <img class="dota_stats_dotalevel" src="https://cdn.stratz.com/images/dota2/battle_pass/trophy_ti2023_level_2.png">
-                    <span class="dota_stats_battlepass_level value" data-tooltip-text="Battle Pass Level" >${battlepass_level}</span>
+                    <img class="dota_stats_dotalevel" data-tooltip-text="Level: ${battlepass_level}" src="https://cdn.stratz.com/images/dota2/battle_pass/trophy_ti2023_level_2.png">
                       `
                     : ""
                 }

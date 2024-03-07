@@ -98,7 +98,7 @@
   width: 48px !important;
   height: 48px !important;
   line-height: 55px !important;
-  margin: 0 10px 0 0;
+  margin: 0px;
 }
 
 .dota_stats_img {
@@ -113,11 +113,6 @@
   margin-left: 15px;
   cursor: help;
 }
-.dota_stats_dotalevel {
-  position: relative;
-  width: 42px;
-  margin-left: 10px;
-}
 
 .dota_stats_favoritegroup_content {
   height: 180px !important;
@@ -129,22 +124,29 @@
   align-items: center;
 }
 
-.dota_stats_battlepass_level {
-  /* background-color: hsla(0,0%,0%,0.7);
-  border-radius: 4px;
-  padding: 0.2em 0.3em 0.3em;
-  line-height: normal; */
-  /* color: hsla(0,0%,100%,0.8); */
-  position: absolute;
-  margin-left: 206px;
-  margin-top: 4px;
-  z-index: 999;
-  /* position: absolute; */
-  /* top: 10px;
-  left: 52%; */
-  /* transform: translate(-150%, -50%); */
-  color: white;
+.dota_stats_battlepass{
+  position: relative;
+  display: inline-block;
 }
+
+.dota_stats_dotalevel {
+  max-width: 100%;
+  height: auto;
+}
+
+.dota_stats_battlepass_level {
+  position: absolute;
+  top: 50%;
+  left: -176px;
+  line-height: normal;
+  color: hsla(0,0%,100%,0.8);
+  transform: translate(-50%, -50%);
+  background-color: hsla(0,0%,0%,0.7);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+
 
 .guild {
   -webkit-letter-spacing: 0.0083em;
