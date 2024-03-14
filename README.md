@@ -6,7 +6,10 @@ This extension allows you to watch your detailed DOTA 2 statistics.
 Using this extension you can see not only your stats, but the opponent's stats too, so it'll be helpful to see who's playing against you.
 
 ---
+Chrome Web Store link:
+[Extension Web Store](https://chromewebstore.google.com/detail/dota-stats-steam-profile/ieoconjnmfpeodapjhhgpfhikgafneia?hl=pt-BR&authuser=0)
 
+---
 ## Features
 
 **Seamlessly integrates with any Steam profile, displaying Dota 2 stats directly on the profile page.**
@@ -31,8 +34,6 @@ Using this extension you can see not only your stats, but the opponent's stats t
 - Click on username to redirect to [Stratz](https://stratz.com) profile
 - Texts tooltips informations
 
-Chrome Web Store link:
-[Extension Web Store](https://chromewebstore.google.com/detail/dota-stats-steam-profile/ieoconjnmfpeodapjhhgpfhikgafneia?hl=pt-BR&authuser=0)
 ---
 >Feel free to make new PR or submit any ideas.
 ---
