@@ -11,7 +11,10 @@ Using this extension you can see not only your stats, but the opponent's stats t
 
 **Seamlessly integrates with any Steam profile, displaying Dota 2 stats directly on the profile page.**
 
+<img src="images/dota_stats_steam.gif" width="740"/>
+
 ![alt text](https://i.imgur.com/YOXMxj3.png)
+
 
 - Matches
 - Winrate
