@@ -28,6 +28,8 @@ Using this extension you can see not only your stats, but the opponent's stats t
 - Click on username to redirect to [Stratz](https://stratz.com) profile
 - Texts tooltips informations
 
+Chrome Web Store link:
+[Extension Web Store](https://chromewebstore.google.com/detail/dota-stats-steam-profile/ieoconjnmfpeodapjhhgpfhikgafneia?hl=pt-BR&authuser=0)
 ---
 >Feel free to make new PR or submit any ideas.
 ---
