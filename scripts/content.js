@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     updateDotaStatsDOM(message.data);
   }
   if (message.data && message.action === "logData") {
-    console.log("DATA LOG", message.data);
+    // console.log("DATA LOG", message.data);
   }
 });
 

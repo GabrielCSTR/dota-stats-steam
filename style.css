@@ -82,7 +82,7 @@
   padding: 1px;
   position: absolute;
   z-index: 1;
-  top: 110%; 
+  top: 110%;
   left: 50%;
   margin-left: -40px;
   opacity: 0;
@@ -95,8 +95,8 @@
 }
 
 .dota_stats_best_hero {
-  width: 48px !important;
-  height: 48px !important;
+  width: 50px !important;
+  height: 50px !important;
   line-height: 55px !important;
   margin: 0px;
 }
@@ -105,9 +105,11 @@
   margin: 2px 0px 0px 2px;
   width: 45px !important;
   height: 45px !important;
+  object-fit: cover;
+  object-position: center;
 }
 
-.dota_stats_dotaplus{
+.dota_stats_dotaplus {
   position: relative;
   width: 42px;
   margin-left: 15px;
@@ -124,7 +126,7 @@
   align-items: center;
 }
 
-.dota_stats_battlepass{
+.dota_stats_battlepass {
   position: relative;
   display: inline-block;
 }
@@ -139,14 +141,12 @@
   top: 50%;
   left: -176px;
   line-height: normal;
-  color: hsla(0,0%,100%,0.8);
+  color: hsla(0, 0%, 100%, 0.8);
   transform: translate(-50%, -50%);
-  background-color: hsla(0,0%,0%,0.7);
+  background-color: hsla(0, 0%, 0%, 0.7);
   border-radius: 4px;
   font-size: 12px;
 }
-
-
 
 .guild {
   -webkit-letter-spacing: 0.0083em;
@@ -156,7 +156,7 @@
   font-size: 18px;
   line-height: 24px;
   font-weight: 700;
-  color: hsl(187,31%,73%);
+  color: hsl(187, 31%, 73%);
   display: inline;
   vertical-align: middle;
   margin-left: 5px;
@@ -174,7 +174,7 @@
 }
 
 @media screen and (max-width: 480px) {
-  .custom-star-image{
+  .custom-star-image {
     left: 0px !important;
     top: 83px !important;
     margin-left: -8px !important;

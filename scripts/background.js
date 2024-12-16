@@ -13,8 +13,8 @@ let allHeros = "";
 let playerBestHeroes = "";
 
 chrome.storage.local.get("config", (data) => {
-  bearerToken = data.config.STRATZ_TOKEN;
-  stratzApi = data.config.STRATZ_GQL;
+  bearerToken = data.config?.STRATZ_TOKEN;
+  stratzApi = data.config?.STRATZ_GQL;
 });
 
 async function makeGraphQLProfileRequest(steamID3) {
@@ -152,17 +152,20 @@ async function makeGraphQLGetPlayerBestHeroes(steamID3) {
 }
 
 async function getRequestAPIStratz(stratzApi, query, variables, type) {
-  return await fetch(stratzApi, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${bearerToken}`,
-    },
-    body: JSON.stringify({ query, variables }),
-  })
-    .then((response) => response.json())
-    .then((data) => processAndSendMessage(data, type))
-    .catch((error) => console.error("GraphQL Error:", error));
+  try {
+    const response = await fetch(stratzApi, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${bearerToken}`,
+      },
+      body: JSON.stringify({ query, variables }),
+    });
+    const data = await response.json();
+    processAndSendMessage(data, type);
+  } catch (error) {
+    console.error("GraphQL Error:", error);
+  }
 }
 
 function processAndSendMessage(data, type) {
@@ -170,9 +173,6 @@ function processAndSendMessage(data, type) {
   if (type === "playerInfo") {
     processedData = data?.data?.player;
   }
-  // if (type === "allHeros") {
-  //   allHeros = data?.data?.constants?.heroes;
-  // }
   if (type === "bestHeroes") {
     playerBestHeroes = data?.data?.player?.heroesGroupBy.sort(
       (a, b) => b.matchCount - a.matchCount
@@ -182,6 +182,7 @@ function processAndSendMessage(data, type) {
   processedData = processGraphQLData(data);
   sendMessageToContentScript(processedData);
 }
+
 function processGraphQLPlayer() {
   // processedData?.MatchGroupByHero.find((hero) => {
   //   const bestHero = allHeros.find((item) => item.id === hero.heroId);
@@ -278,15 +279,19 @@ function getLeaderboardMedalImage(seasonRank, seasonLeaderboardRank) {
 }
 
 function sendMessageToContentScript(data) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    const activeTab = tabs[0];
-    if (activeTab) {
-      chrome.tabs.sendMessage(activeTab.id, {
-        action: "updateDotaStats",
-        data: data,
-      });
-    } else {
-      console.error("No active tab found");
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs[0]?.id) {
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        { action: "updateDotaStats", data },
+        (response) => {
+          if (chrome.runtime.lastError) {
+            console.error("Runtime error:", chrome.runtime.lastError);
+          } else {
+            console.log("Response from content script:", response);
+          }
+        }
+      );
     }
   });
 }
