@@ -25,7 +25,7 @@ Chrome Web Store link:
 - Location
 - Battle Pass Level
 - Subscription Dota Plus
-- Best heros
+- Best heroes
 - First Match Date
 - Medal
 - Star Rank
